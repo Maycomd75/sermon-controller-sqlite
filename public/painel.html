@@ -4,6 +4,48 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Painel do Pastor — IQBJ (Editor avançado)</title>
+<script>
+// ===========================
+//  AUTO-CONEXÃO AUTOMÁTICA
+// ===========================
+
+const DEFAULT_SERVER = "https://sermon-controller-sqlite.onrender.com";
+let ws = null;
+
+// Quando abrir a página → já conecta
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("serverUrl").value = DEFAULT_SERVER;
+    connectToServer(DEFAULT_SERVER);
+});
+
+// Conexão automática
+function connectToServer(url) {
+    try {
+        ws = new WebSocket(url.replace("http", "ws") + "/ws");
+
+        ws.onopen = () => {
+            document.getElementById("status").innerText = "🔗 Conectado";
+            console.log("Conectado automaticamente.");
+        };
+
+        ws.onclose = () => {
+            document.getElementById("status").innerText = "❌ Desconectado";
+            console.log("Servidor desconectado.");
+        };
+
+        ws.onerror = () => {
+            document.getElementById("status").innerText = "⚠️ Erro";
+            console.log("Erro na conexão.");
+        };
+
+        ws.onmessage = evt => {
+            console.log("MSG:", evt.data);
+        };
+
+    } catch (e) {
+        console.error("Erro ao conectar:", e);
+    }
+} 
 <style>
   :root{
     --q-red:#c0392b; --q-yellow:#f6c85f; --q-blue:#2b6cb0; --q-purple:#7c3aed;
