@@ -109,14 +109,57 @@
     <aside class="card" aria-hidden>
       <div>
         <label>Conectar WebSocket</label>
-        <div style="display:flex;gap:8px">
-          <input id="wsUrl" placeholder="ws://192.168.7.71:3000"/>
-          <button class="btn btn-primary" id="connectWS">Conectar</button>
-        </div>
-        <div id="status" class="small" style="margin-top:8px">Desconectado</div>
-      </div>
+<div style="display:flex;gap:8px">
+    <input id="wsUrl" placeholder="ws://192.168.7.71:3000"/>
+    <button class="btn btn-primary" id="connectWS">Conectar</button>
+</div>
+<div id="status" class="small" style="margin-top:8px">Desconectado</div>
 
-      <div style="margin-top:12px">
+<script>
+const DEFAULT_WS = "wss://sermon-controller-sqlite.onrender.com/ws";
+let ws = null;
+
+// Quando abrir o painel → preencher + conectar automaticamente
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("wsUrl").value = DEFAULT_WS;
+    connectWS(DEFAULT_WS);
+});
+
+// Função de conexão automática/manual
+function connectWS(url) {
+    try {
+        ws = new WebSocket(url);
+
+        ws.onopen = () => {
+            document.getElementById("status").innerText = "🔗 Conectado";
+            console.log("WS conectado automaticamente:", url);
+        };
+
+        ws.onclose = () => {
+            document.getElementById("status").innerText = "❌ Desconectado";
+            console.log("WS desconectado.");
+        };
+
+        ws.onerror = () => {
+            document.getElementById("status").innerText = "⚠️ Erro na conexão";
+            console.log("WS erro.");
+        };
+
+        ws.onmessage = msg => {
+            console.log("WS MSG:", msg.data);
+        };
+    } catch (e) {
+        console.error("Erro ao conectar WS:", e);
+    }
+}
+
+// Conexão manual continua funcionando caso precise
+document.getElementById("connectWS").addEventListener("click", () => {
+    const url = document.getElementById("wsUrl").value;
+    connectWS(url);
+});
+</script>
+     <div style="margin-top:12px">
         <label>Temas Rápidos</label>
         <div class="theme-select" style="margin-top:8px">
           <button class="btn btn-ghost" data-theme="quadrangular">Quadrangular</button>
