@@ -5,138 +5,137 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Painel do Pastor — IQBJ (Editor avançado)</title>
 <style>
-  :root{
-    --q-red:#c0392b; --q-yellow:#f6c85f; --q-blue:#2b6cb0; --q-purple:#7c3aed;
-    --bg:linear-gradient(180deg,#051122,#08172a);
-    --card:rgba(255,255,255,0.03);
-    --muted:#bcd2ea;
-  }
-  html,body{height:100%;margin:0;font-family:Inter,Arial; background:var(--bg); color:#eaf4ff}
-  .wrap{max-width:1200px;margin:12px auto;display:grid;grid-template-columns:1fr 360px;gap:12px;padding:12px}
-  .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
-  h1{margin:0 0 6px;color:var(--q-yellow)}
-  label{display:block;font-weight:700;color:#dff0ff;margin-bottom:6px}
-  input,textarea,select,button{font:inherit}
-  input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-  textarea{min-height:60px;resize:vertical}
-  .btn{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
-  .btn-primary{background:linear-gradient(90deg,var(--q-purple),var(--q-blue));color:#021}
-  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#cfe6ff}
-  .slides-list{margin-top:12px;display:flex;flex-direction:column;gap:8px}
-  .slide-editor{display:flex;gap:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01);align-items:flex-start}
-  .slide-meta{flex:1}
-  .small{font-size:13px;color:#bcd2ea}
-  .preview{margin-top:12px;padding:12px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.005))}
-  .theme-select{display:flex;gap:8px}
-  .slide-actions-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  @media(max-width:1000px){.wrap{grid-template-columns:1fr}}
+  :root{
+    --q-red:#c0392b; --q-yellow:#f6c85f; --q-blue:#2b6cb0; --q-purple:#7c3aed;
+    --bg:linear-gradient(180deg,#051122,#08172a);
+    --card:rgba(255,255,255,0.03);
+    --muted:#bcd2ea;
+  }
+  html,body{height:100%;margin:0;font-family:Inter,Arial; background:var(--bg); color:#eaf4ff}
+  .wrap{max-width:1200px;margin:12px auto;display:grid;grid-template-columns:1fr 360px;gap:12px;padding:12px}
+  .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+  h1{margin:0 0 6px;color:var(--q-yellow)}
+  label{display:block;font-weight:700;color:#dff0ff;margin-bottom:6px}
+  input,textarea,select,button{font:inherit}
+  input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+  textarea{min-height:60px;resize:vertical}
+  .btn{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+  .btn-primary{background:linear-gradient(90deg,var(--q-purple),var(--q-blue));color:#021}
+  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#cfe6ff}
+  .slides-list{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  .slide-editor{display:flex;gap:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01);align-items:flex-start}
+  .slide-meta{flex:1}
+  .small{font-size:13px;color:#bcd2ea}
+  .preview{margin-top:12px;padding:12px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.005))}
+  .theme-select{display:flex;gap:8px}
+  @media(max-width:1000px){.wrap{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <main class="card" aria-live="polite">
-      <h1>Painel do Pastor — Editor Avançado</h1>
-      <div class="small">Templates, estilos por slide, imagens de fundo, e controle do telão.</div>
+  <div class="wrap">
+    <main class="card" aria-live="polite">
+      <h1>Painel do Pastor — Editor Avançado</h1>
+      <div class="small">Templates, estilos por slide, imagens de fundo, e controle do telão.</div>
 
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <div style="flex:1">
-          <label>Servidor HTTP</label>
-          <input id="serverHttp" placeholder="Ex: http://192.168.0.120:3000"/>
-        </div>
-        <div style="width:160px">
-          <label>Room</label>
-          <input id="room" value="iqbj_sala1"/>
-        </div>
-      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <div style="flex:1">
+          <label>Servidor HTTP</label>
+          <input id="serverHttp" placeholder="Ex: http://192.168.0.120:3000"/>
+        </div>
+        <div style="width:160px">
+          <label>Room</label>
+          <input id="room" value="iqbj_sala1"/>
+        </div>
+      </div>
 
-      <div style="margin-top:10px">
-        <label>Título do Sermão</label>
-        <input id="title" placeholder="Título do sermão"/>
-      </div>
+      <div style="margin-top:10px">
+        <label>Título do Sermão</label>
+        <input id="title" placeholder="Título do sermão"/>
+      </div>
 
-      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-        <label style="margin:0">Adicionar Slide</label>
-        <select id="templateSelect" style="flex:1">
-          <option value="title">Título</option>
-          <option value="bullet">Tópico (bullets)</option>
-          <option value="verse">Versículo</option>
-          <option value="image">Imagem</option>
-          <option value="quote">Citação</option>
-          <option value="two">Duas Colunas</option>
-          <option value="highlight">Caixa de Destaque</option>
-        </select>
-        <button class="btn btn-primary" id="addSlideBtn">Adicionar</button>
-      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+        <label style="margin:0">Adicionar Slide</label>
+        <select id="templateSelect" style="flex:1">
+          <option value="title">Título</option>
+          <option value="bullet">Tópico (bullets)</option>
+          <option value="verse">Versículo</option>
+          <option value="image">Imagem</option>
+          <option value="quote">Citação</option>
+          <option value="two">Duas Colunas</option>
+          <option value="highlight">Caixa de Destaque</option>
+        </select>
+        <button class="btn btn-primary" id="addSlideBtn">Adicionar</button>
+      </div>
 
-      <div class="slides-list" id="slidesList" aria-live="polite"></div>
+      <div class="slides-list" id="slidesList" aria-live="polite"></div>
 
-      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-        <button class="btn btn-primary" id="saveBtn">Salvar no BD</button>
-        <button class="btn btn-ghost" id="newBtn">Novo Sermão</button>
-        <button class="btn btn-ghost" id="loadBtn">Carregar Sermões</button>
-        <button class="btn btn-primary" id="sendBtn">Salvar & Enviar ao Telão</button>
-      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="saveBtn">Salvar no BD</button>
+        <button class="btn btn-ghost" id="newBtn">Novo Sermão</button>
+        <button class="btn btn-ghost" id="loadBtn">Carregar Sermões</button>
+        <button class="btn btn-primary" id="sendBtn">Salvar & Enviar ao Telão</button>
+      </div>
 
-      <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
-        <button class="btn btn-primary" id="prevBtn">Anterior</button>
-        <button class="btn btn-primary" id="nextBtn">Próximo</button>
-        <div id="currentLabel" class="small" style="margin-left:8px">Slide: -</div>
-      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+        <button class="btn btn-primary" id="prevBtn">Anterior</button>
+        <button class="btn btn-primary" id="nextBtn">Próximo</button>
+        <div id="currentLabel" class="small" style="margin-left:8px">Slide: -</div>
+      </div>
 
-      <section style="margin-top:14px">
-        <strong style="color:var(--q-yellow)">Pré-visualização Rápida</strong>
-        <div id="preview" class="preview"><div id="previewStage" style="min-height:120px;display:flex;align-items:center;justify-content:center"></div></div>
-      </section>
+      <section style="margin-top:14px">
+        <strong style="color:var(--q-yellow)">Pré-visualização Rápida</strong>
+        <div id="preview" class="preview"><div id="previewStage" style="min-height:120px;display:flex;align-items:center;justify-content:center"></div></div>
+      </section>
 
-      <section style="margin-top:14px">
-        <strong style="color:var(--q-yellow)">Sermões Salvos</strong>
-        <div id="sermonList" style="margin-top:8px"></div>
-      </section>
-    </main>
+      <section style="margin-top:14px">
+        <strong style="color:var(--q-yellow)">Sermões Salvos</strong>
+        <div id="sermonList" style="margin-top:8px"></div>
+      </section>
+    </main>
 
-    <aside class="card" aria-hidden>
-      <div>
-        <label>Conectar WebSocket</label>
-        <div style="display:flex;gap:8px">
-          <input id="wsUrl" placeholder="ws://192.168.0.120:3000"/>
-          <button class="btn btn-primary" id="connectWS">Conectar</button>
-        </div>
-        <div id="status" class="small" style="margin-top:8px">Desconectado</div>
-      </div>
+    <aside class="card" aria-hidden>
+      <div>
+        <label>Conectar WebSocket</label>
+        <div style="display:flex;gap:8px">
+          <input id="wsUrl" placeholder="ws://192.168.0.120:3000"/>
+          <button class="btn btn-primary" id="connectWS">Conectar</button>
+        </div>
+        <div id="status" class="small" style="margin-top:8px">Desconectado</div>
+      </div>
 
-      <div style="margin-top:12px">
-        <label>Temas Rápidos</label>
-        <div class="theme-select" style="margin-top:8px">
-          <button class="btn btn-ghost" data-theme="quadrangular">Quadrangular</button>
-          <button class="btn btn-ghost" data-theme="dark">Escuro</button>
-          <button class="btn btn-ghost" data-theme="light">Claro</button>
-        </div>
-        <div class="small" style="margin-top:8px">Clique em um tema para aplicá-lo ao slide selecionado.</div>
-      </div>
+      <div style="margin-top:12px">
+        <label>Temas Rápidos</label>
+        <div class="theme-select" style="margin-top:8px">
+          <button class="btn btn-ghost" data-theme="quadrangular">Quadrangular</button>
+          <button class="btn btn-ghost" data-theme="dark">Escuro</button>
+          <button class="btn btn-ghost" data-theme="light">Claro</button>
+        </div>
+        <div class="small" style="margin-top:8px">Clique em um tema para aplicá-lo ao slide selecionado.</div>
+      </div>
 
-      <div style="margin-top:12px">
-        <strong class="small">Dicas</strong>
-        <div class="small">• Abra no PC: <code>http://IP:3000/tela.html?room=iqbj_sala1</code><br/>• No painel informe <code>ws://IP:3000</code> e clique Conectar.</div>
-      </div>
-    </aside>
-  </div>
+      <div style="margin-top:12px">
+        <strong class="small">Dicas</strong>
+        <div class="small">• Abra no PC: <code>http://IP:3000/tela.html?room=iqbj_sala1</code><br/>• No painel informe <code>ws://IP:3000</code> e clique Conectar.</div>
+      </div>
+    </aside>
+  </div>
 
 <script>
 /* Panel script:
-   - templates
-   - slide-level style: textColor, bgColor, bgImage (dataURL), theme
-   - CRUD via REST
-   - WebSocket for realtime control
+   - templates
+   - slide-level style: textColor, bgColor, bgImage (dataURL), theme
+   - CRUD via REST
+   - WebSocket for realtime control
 */
 
 const TEMPLATES = {
-  title:{type:'title', label:'Título', fields:['content','subtitle']},
-  bullet:{type:'bullet', label:'Tópico', fields:['lines']},
-  verse:{type:'verse', label:'Versículo', fields:['verseText','reference']},
-  image:{type:'image', label:'Imagem', fields:['imageUrl','caption']},
-  quote:{type:'quote', label:'Citação', fields:['content','author']},
-  two:{type:'two', label:'Duas Colunas', fields:['left','right']},
-  highlight:{type:'highlight', label:'Destaque', fields:['content']}
+  title:{type:'title', label:'Título', fields:['content','subtitle']},
+  bullet:{type:'bullet', label:'Tópico', fields:['lines']},
+  verse:{type:'verse', label:'Versículo', fields:['verseText','reference']},
+  image:{type:'image', label:'Imagem', fields:['imageUrl','caption']},
+  quote:{type:'quote', label:'Citação', fields:['content','author']},
+  two:{type:'two', label:'Duas Colunas', fields:['left','right']},
+  highlight:{type:'highlight', label:'Destaque', fields:['content']}
 };
 
 const serverHttpEl = document.getElementById('serverHttp');
@@ -160,370 +159,297 @@ function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, m
 
 /* Render slides editors */
 function renderSlides(){
-  slidesList.innerHTML = '';
-  slides.forEach((s,i) => {
-    const row = document.createElement('div'); row.className = 'slide-editor';
-    const meta = document.createElement('div'); meta.className = 'slide-meta';
-    meta.innerHTML = `<div style="font-weight:800">Slide ${i+1} — ${escapeHtml(TEMPLATES[s.type].label)}</div>`;
+  slidesList.innerHTML = '';
+  slides.forEach((s,i) => {
+    const row = document.createElement('div'); row.className = 'slide-editor';
+    const meta = document.createElement('div'); meta.className = 'slide-meta';
+    meta.innerHTML = `<div style="font-weight:800">Slide ${i+1} — ${escapeHtml(TEMPLATES[s.type].label)}</div>`;
 
-    // add field inputs
-    TEMPLATES[s.type].fields.forEach(f => {
-      const wrapper = document.createElement('div'); wrapper.style.marginTop='8px';
-      if(f === 'lines'){
-        const ta = document.createElement('textarea'); ta.placeholder = 'Uma linha por bullet';
-        ta.value = (s.data && s.data.lines) ? s.data.lines.join('\n') : '';
-        ta.addEventListener('input', ()=> s.data.lines = ta.value.split('\n').map(x=>x.trim()).filter(Boolean));
-        wrapper.appendChild(ta);
-      } else if(f === 'imageUrl'){
-        const inp = document.createElement('input'); inp.placeholder = 'URL da imagem (ou use upload abaixo)';
-        inp.value = s.data && s.data.imageUrl ? s.data.imageUrl : '';
-        inp.addEventListener('input', ()=> s.data.imageUrl = inp.value.trim());
-        wrapper.appendChild(inp);
-        // file upload
-        const file = document.createElement('input'); file.type='file'; file.accept='image/*'; file.style.marginTop='6px';
-        file.addEventListener('change', (ev)=>{
-          const fobj = ev.target.files[0]; if(!fobj) return;
-          const reader = new FileReader();
-          reader.onload = () => { s.data.imageUrl = reader.result; renderPreview(); };
-          reader.readAsDataURL(fobj);
-        });
-        wrapper.appendChild(file);
-      } else {
-        const inp = (f==='content' || f==='verseText' || f==='left' || f==='right') ? document.createElement('textarea') : document.createElement('input');
-        inp.placeholder = f;
-        inp.value = s.data && s.data[f] ? s.data[f] : '';
-        inp.addEventListener('input', ()=> s.data[f] = inp.value);
-        wrapper.appendChild(inp);
-      }
-      meta.appendChild(wrapper);
-    });
+    // add field inputs
+    TEMPLATES[s.type].fields.forEach(f => {
+      const wrapper = document.createElement('div'); wrapper.style.marginTop='8px';
+      if(f === 'lines'){
+        const ta = document.createElement('textarea'); ta.placeholder = 'Uma linha por bullet';
+        ta.value = (s.data && s.data.lines) ? s.data.lines.join('\\n') : '';
+        ta.addEventListener('input', ()=> s.data.lines = ta.value.split('\\n').map(x=>x.trim()).filter(Boolean));
+        wrapper.appendChild(ta);
+      } else if(f === 'imageUrl'){
+        const inp = document.createElement('input'); inp.placeholder = 'URL da imagem (ou use upload abaixo)';
+        inp.value = s.data && s.data.imageUrl ? s.data.imageUrl : '';
+        inp.addEventListener('input', ()=> s.data.imageUrl = inp.value.trim());
+        wrapper.appendChild(inp);
+        // file upload
+        const file = document.createElement('input'); file.type='file'; file.accept='image/*'; file.style.marginTop='6px';
+        file.addEventListener('change', (ev)=>{
+          const fobj = ev.target.files[0]; if(!fobj) return;
+          const reader = new FileReader();
+          reader.onload = () => { s.data.imageUrl = reader.result; renderPreview(); };
+          reader.readAsDataURL(fobj);
+        });
+        wrapper.appendChild(file);
+      } else {
+        const inp = (f==='content' || f==='verseText' || f==='left' || f==='right') ? document.createElement('textarea') : document.createElement('input');
+        inp.placeholder = f;
+        inp.value = s.data && s.data[f] ? s.data[f] : '';
+        inp.addEventListener('input', ()=> s.data[f] = inp.value);
+        wrapper.appendChild(inp);
+      }
+      meta.appendChild(wrapper);
+    });
 
-    // style controls: text color, background color, upload background image, theme selector
-    const styleBox = document.createElement('div'); styleBox.style.marginTop='8px';
-    styleBox.innerHTML = `<div style="font-weight:700;margin-bottom:6px">Estilo do Slide</div>`;
-    const textColorInp = document.createElement('input'); textColorInp.type='color'; textColorInp.value = (s.style && s.style.textColor) ? s.style.textColor : '#ffffff';
-    textColorInp.addEventListener('input', ()=> { s.style = s.style || {}; s.style.textColor = textColorInp.value; renderPreview(); });
-    const bgColorInp = document.createElement('input'); bgColorInp.type='color'; bgColorInp.value = (s.style && s.style.bgColor) ? s.style.bgColor : '#041226';
-    bgColorInp.addEventListener('input', ()=> { s.style = s.style || {}; s.style.bgColor = bgColorInp.value; renderPreview(); });
+    // style controls: text color, background color, upload background image, theme selector
+    const styleBox = document.createElement('div'); styleBox.style.marginTop='8px';
+    styleBox.innerHTML = `<div style="font-weight:700;margin-bottom:6px">Estilo do Slide</div>`;
+    const textColorInp = document.createElement('input'); textColorInp.type='color'; textColorInp.value = (s.style && s.style.textColor) ? s.style.textColor : '#ffffff';
+    textColorInp.addEventListener('input', ()=> { s.style = s.style || {}; s.style.textColor = textColorInp.value; renderPreview(); });
+    const bgColorInp = document.createElement('input'); bgColorInp.type='color'; bgColorInp.value = (s.style && s.style.bgColor) ? s.style.bgColor : '#041226';
+    bgColorInp.addEventListener('input', ()=> { s.style = s.style || {}; s.style.bgColor = bgColorInp.value; renderPreview(); });
 
-    const bgFile = document.createElement('input'); bgFile.type='file'; bgFile.accept='image/*'; bgFile.style.display='block'; bgFile.style.marginTop='6px';
-    bgFile.addEventListener('change', (ev)=> {
-      const fobj = ev.target.files[0]; if(!fobj) return;
-      const reader = new FileReader();
-      reader.onload = ()=> { s.style = s.style || {}; s.style.bgImage = reader.result; renderPreview(); };
-      reader.readAsDataURL(fobj);
-    });
+    const bgFile = document.createElement('input'); bgFile.type='file'; bgFile.accept='image/*'; bgFile.style.display='block'; bgFile.style.marginTop='6px';
+    bgFile.addEventListener('change', (ev)=> {
+      const fobj = ev.target.files[0]; if(!fobj) return;
+      const reader = new FileReader();
+      reader.onload = ()=> { s.style = s.style || {}; s.style.bgImage = reader.result; renderPreview(); };
+      reader.readAsDataURL(fobj);
+    });
 
-    const themeSel = document.createElement('select'); themeSel.style.marginTop='6px';
-    ['','quadrangular','dark','light'].forEach(t => {
-      const o = document.createElement('option'); o.value = t; o.textContent = t ? t : 'Sem tema';
-      themeSel.appendChild(o);
-    });
-    themeSel.value = (s.style && s.style.theme) ? s.style.theme : '';
-    themeSel.addEventListener('change', ()=> { s.style = s.style || {}; s.style.theme = themeSel.value; applyThemeToStyle(s.style, themeSel.value); renderPreview(); });
+    const themeSel = document.createElement('select'); themeSel.style.marginTop='6px';
+    ['','quadrangular','dark','light'].forEach(t => {
+      const o = document.createElement('option'); o.value = t; o.textContent = t ? t : 'Sem tema';
+      themeSel.appendChild(o);
+    });
+    themeSel.value = (s.style && s.style.theme) ? s.style.theme : '';
+    themeSel.addEventListener('change', ()=> { s.style = s.style || {}; s.style.theme = themeSel.value; applyThemeToStyle(s.style, themeSel.value); renderPreview(); });
 
-    const rowStyles = document.createElement('div'); rowStyles.style.display='flex'; rowStyles.style.gap='8px'; rowStyles.style.marginTop='6px';
-    const labelTextColor = document.createElement('div'); labelTextColor.textContent='Cor do texto:'; labelTextColor.style.fontSize='13px'; labelTextColor.style.color='#cfe6ff';
-    const labelBgColor = document.createElement('div'); labelBgColor.textContent='Cor de fundo:'; labelBgColor.style.fontSize='13px'; labelBgColor.style.color='#cfe6ff';
-    rowStyles.appendChild(labelTextColor); rowStyles.appendChild(textColorInp); rowStyles.appendChild(labelBgColor); rowStyles.appendChild(bgColorInp);
-    styleBox.appendChild(rowStyles);
-    styleBox.appendChild(document.createTextNode('Imagem de fundo: ')); styleBox.appendChild(bgFile);
-    styleBox.appendChild(document.createElement('div')); styleBox.appendChild(document.createTextNode('Tema: ')); styleBox.appendChild(themeSel);
+    const rowStyles = document.createElement('div'); rowStyles.style.display='flex'; rowStyles.style.gap='8px'; rowStyles.style.marginTop='6px';
+    const labelTextColor = document.createElement('div'); labelTextColor.textContent='Cor do texto:'; labelTextColor.style.fontSize='13px'; labelTextColor.style.color='#cfe6ff';
+    const labelBgColor = document.createElement('div'); labelBgColor.textContent='Cor de fundo:'; labelBgColor.style.fontSize='13px'; labelBgColor.style.color='#cfe6ff';
+    rowStyles.appendChild(labelTextColor); rowStyles.appendChild(textColorInp); rowStyles.appendChild(labelBgColor); rowStyles.appendChild(bgColorInp);
+    styleBox.appendChild(rowStyles);
+    styleBox.appendChild(document.createTextNode('Imagem de fundo: ')); styleBox.appendChild(bgFile);
+    styleBox.appendChild(document.createElement('div')); styleBox.appendChild(document.createTextNode('Tema: ')); styleBox.appendChild(themeSel);
 
-    meta.appendChild(styleBox);
+    meta.appendChild(styleBox);
 
-    const actions = document.createElement('div'); actions.style.display='flex'; actions.style.flexDirection='column'; actions.style.gap='6px';
-    const btnUp = document.createElement('button'); btnUp.className='btn btn-ghost'; btnUp.textContent='↑'; btnUp.onclick = ()=> { if(i>0){ slides.splice(i-1,0,slides.splice(i,1)[0]); renderSlides(); } };
-    const btnDown = document.createElement('button'); btnDown.className='btn btn-ghost'; btnDown.textContent='↓'; btnDown.onclick = ()=> { if(i<slides.length-1){ slides.splice(i+1,0,slides.splice(i,1)[0]); renderSlides(); } };
-    const btnDel = document.createElement('button'); btnDel.className='btn'; btnDel.style.color='#ffb4b4'; btnDel.textContent='Excluir'; btnDel.onclick = ()=> { if(confirm('Remover slide?')){ slides.splice(i,1); renderSlides(); } };
+    const actions = document.createElement('div'); actions.style.display='flex'; actions.style.flexDirection='column'; actions.style.gap='6px';
+    const btnUp = document.createElement('button'); btnUp.className='btn btn-ghost'; btnUp.textContent='↑'; btnUp.onclick = ()=> { if(i>0){ slides.splice(i-1,0,slides.splice(i,1)[0]); renderSlides(); } };
+    const btnDown = document.createElement('button'); btnDown.className='btn btn-ghost'; btnDown.textContent='↓'; btnDown.onclick = ()=> { if(i<slides.length-1){ slides.splice(i+1,0,slides.splice(i,1)[0]); renderSlides(); } };
+    const btnDel = document.createElement('button'); btnDel.className='btn'; btnDel.style.color='#ffb4b4'; btnDel.textContent='Excluir'; btnDel.onclick = ()=> { if(confirm('Remover slide?')){ slides.splice(i,1); renderSlides(); } };
+    actions.appendChild(btnUp); actions.appendChild(btnDown); actions.appendChild(btnDel);
 
-    // NEW: Send buttons for each slide
-    const sendThis = document.createElement('button'); sendThis.className = 'btn btn-primary'; sendThis.textContent = 'Enviar este slide';
-    sendThis.title = 'Envia apenas este slide ao telão';
-    sendThis.onclick = ()=> sendSingleSlideToDisplay(s);
-
-    const sendFromHere = document.createElement('button'); sendFromHere.className = 'btn btn-ghost'; sendFromHere.textContent = 'Iniciar a partir daqui';
-    sendFromHere.title = 'Envia o sermão completo e inicia o telão neste slide';
-    sendFromHere.onclick = ()=> {
-      if(editingId){
-        // send saved sermon and start at index i
-        sendSermonAndGotoById(editingId, i);
-      } else {
-        // sermon not yet saved — send current slides as sermon and goto i
-        const tempSermon = { id: null, title: titleEl.value || 'Sermão (não salvo)', slides: slides };
-        sendSermonObjectAndGoto(tempSermon, i);
-      }
-    };
-
-    actions.appendChild(btnUp); actions.appendChild(btnDown); actions.appendChild(btnDel);
-    // add send actions below other actions
-    actions.appendChild(sendThis); actions.appendChild(sendFromHere);
-
-    row.appendChild(meta); row.appendChild(actions);
-    slidesList.appendChild(row);
-  });
-  renderPreview();
+    row.appendChild(meta); row.appendChild(actions);
+    slidesList.appendChild(row);
+  });
+  renderPreview();
 }
 
 /* apply theme quick presets to style object */
 function applyThemeToStyle(style, theme){
-  if(!style) style = {};
-  if(theme === 'quadrangular'){
-    style.textColor = '#ffffff';
-    style.bgColor = '#061426';
-    style.bgImage = null;
-  } else if(theme === 'dark'){
-    style.textColor = '#ffffff';
-    style.bgColor = '#0b0f14';
-    style.bgImage = null;
-  } else if(theme === 'light'){
-    style.textColor = '#001022';
-    style.bgColor = '#ffffff';
-    style.bgImage = null;
-  }
+  if(!style) style = {};
+  if(theme === 'quadrangular'){
+    style.textColor = '#ffffff';
+    style.bgColor = '#061426';
+    style.bgImage = null;
+  } else if(theme === 'dark'){
+    style.textColor = '#ffffff';
+    style.bgColor = '#0b0f14';
+    style.bgImage = null;
+  } else if(theme === 'light'){
+    style.textColor = '#001022';
+    style.bgColor = '#ffffff';
+    style.bgImage = null;
+  }
 }
 
 /* add new slide */
 document.getElementById('addSlideBtn').addEventListener('click', ()=> {
-  const t = templateSelect.value;
-  const defData = {};
-  (TEMPLATES[t].fields || []).forEach(f => { if(f==='lines') defData.lines = []; else defData[f] = ''; });
-  const defStyle = { textColor: '#ffffff', bgColor: '#041226', bgImage: null, theme: 'quadrangular' };
-  slides.push({ type: t, data: defData, style: defStyle });
-  renderSlides();
+  const t = templateSelect.value;
+  const defData = {};
+  (TEMPLATES[t].fields || []).forEach(f => { if(f==='lines') defData.lines = []; else defData[f] = ''; });
+  const defStyle = { textColor: '#ffffff', bgColor: '#041226', bgImage: null, theme: 'quadrangular' };
+  slides.push({ type: t, data: defData, style: defStyle });
+  renderSlides();
 });
 
 /* preview render */
 function renderPreview(){
-  previewStage.innerHTML = '';
-  if(slides.length === 0){ previewStage.innerHTML = '<div class="small">Nenhum slide</div>'; return; }
-  const s = slides[currentIndex] || slides[0];
-  const container = document.createElement('div');
-  container.style.width = '100%';
-  container.style.padding = '14px';
-  container.style.borderRadius = '8px';
-  container.style.boxSizing = 'border-box';
-  // apply style
-  const style = s.style || {};
-  if(style.bgImage){
-    container.style.backgroundImage = `url(${style.bgImage})`;
-    container.style.backgroundSize = 'cover';
-    container.style.backgroundPosition = 'center';
-  } else {
-    container.style.background = style.bgColor || '#041226';
-  }
-  const textColor = style.textColor || '#ffffff';
-  // content per type
-  if(s.type === 'title'){
-    const h = document.createElement('div'); h.style.fontSize = '24px'; h.style.fontWeight = '800'; h.style.color = textColor;
-    h.textContent = s.data.content || titleEl.value || 'Título';
-    const sub = document.createElement('div'); sub.style.color = textColor; sub.style.opacity = 0.9; sub.style.marginTop = '6px';
-    sub.textContent = s.data.subtitle || '';
-    container.appendChild(h); container.appendChild(sub);
-  } else if(s.type === 'bullet'){
-    const ul = document.createElement('ul'); ul.style.color = textColor; ul.style.margin='6px 0 0 18px';
-    (s.data.lines || []).forEach(li => { const liEl = document.createElement('li'); liEl.textContent = li; liEl.style.marginBottom='6px'; ul.appendChild(liEl); });
-    container.appendChild(ul);
-  } else if(s.type === 'verse'){
-    const v = document.createElement('div'); v.style.fontStyle='italic'; v.style.color = textColor; v.textContent = s.data.verseText || '';
-    const ref = document.createElement('div'); ref.style.textAlign='right'; ref.style.color = textColor; ref.style.opacity = 0.9; ref.style.marginTop='6px'; ref.textContent = s.data.reference || '';
-    container.appendChild(v); container.appendChild(ref);
-  } else if(s.type === 'image'){
-    const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.justifyContent='center';
-    const img = document.createElement('img'); img.src = s.data.imageUrl || ''; img.style.maxWidth = '80%'; img.style.maxHeight = '220px'; img.style.borderRadius='8px';
-    wrap.appendChild(img);
-    const cap = document.createElement('div'); cap.style.color = textColor; cap.style.marginTop='6px'; cap.textContent = s.data.caption || '';
-    container.appendChild(wrap); container.appendChild(cap);
-  } else if(s.type === 'quote'){
-    const q = document.createElement('div'); q.style.fontSize='20px'; q.style.fontWeight='800'; q.style.color = textColor; q.textContent = `“${s.data.content || ''}”`;
-    const a = document.createElement('div'); a.style.textAlign='right'; a.style.color = textColor; a.style.opacity=0.9; a.textContent = s.data.author || '';
-    container.appendChild(q); container.appendChild(a);
-  } else if(s.type === 'two'){
-    const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.gap='12px';
-    const left = document.createElement('div'); left.style.flex='1'; left.style.color = textColor; left.textContent = s.data.left || '';
-    const right = document.createElement('div'); right.style.flex='1'; right.style.color = textColor; right.textContent = s.data.right || '';
-    wrap.appendChild(left); wrap.appendChild(right); container.appendChild(wrap);
-  } else if(s.type === 'highlight'){
-    const box = document.createElement('div'); box.style.padding='12px'; box.style.borderRadius='8px'; box.style.background='linear-gradient(90deg,var(--q-yellow),rgba(255,255,255,0.02))';
-    box.style.color = '#021'; box.style.fontWeight='800'; box.textContent = s.data.content || '';
-    container.appendChild(box);
-  }
+  previewStage.innerHTML = '';
+  if(slides.length === 0){ previewStage.innerHTML = '<div class="small">Nenhum slide</div>'; return; }
+  const s = slides[currentIndex] || slides[0];
+  const container = document.createElement('div');
+  container.style.width = '100%';
+  container.style.padding = '14px';
+  container.style.borderRadius = '8px';
+  container.style.boxSizing = 'border-box';
+  // apply style
+  const style = s.style || {};
+  if(style.bgImage){
+    container.style.backgroundImage = `url(${style.bgImage})`;
+    container.style.backgroundSize = 'cover';
+    container.style.backgroundPosition = 'center';
+  } else {
+    container.style.background = style.bgColor || '#041226';
+  }
+  const textColor = style.textColor || '#ffffff';
+  // content per type
+  if(s.type === 'title'){
+    const h = document.createElement('div'); h.style.fontSize = '24px'; h.style.fontWeight = '800'; h.style.color = textColor;
+    h.textContent = s.data.content || titleEl.value || 'Título';
+    const sub = document.createElement('div'); sub.style.color = textColor; sub.style.opacity = 0.9; sub.style.marginTop = '6px';
+    sub.textContent = s.data.subtitle || '';
+    container.appendChild(h); container.appendChild(sub);
+  } else if(s.type === 'bullet'){
+    const ul = document.createElement('ul'); ul.style.color = textColor; ul.style.margin='6px 0 0 18px';
+    (s.data.lines || []).forEach(li => { const liEl = document.createElement('li'); liEl.textContent = li; liEl.style.marginBottom='6px'; ul.appendChild(liEl); });
+    container.appendChild(ul);
+  } else if(s.type === 'verse'){
+    const v = document.createElement('div'); v.style.fontStyle='italic'; v.style.color = textColor; v.textContent = s.data.verseText || '';
+    const ref = document.createElement('div'); ref.style.textAlign='right'; ref.style.color = textColor; ref.style.opacity = 0.9; ref.style.marginTop='6px'; ref.textContent = s.data.reference || '';
+    container.appendChild(v); container.appendChild(ref);
+  } else if(s.type === 'image'){
+    const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.justifyContent='center';
+    const img = document.createElement('img'); img.src = s.data.imageUrl || ''; img.style.maxWidth = '80%'; img.style.maxHeight = '220px'; img.style.borderRadius='8px';
+    wrap.appendChild(img);
+    const cap = document.createElement('div'); cap.style.color = textColor; cap.style.marginTop='6px'; cap.textContent = s.data.caption || '';
+    container.appendChild(wrap); container.appendChild(cap);
+  } else if(s.type === 'quote'){
+    const q = document.createElement('div'); q.style.fontSize='20px'; q.style.fontWeight='800'; q.style.color = textColor; q.textContent = `“${s.data.content || ''}”`;
+    const a = document.createElement('div'); a.style.textAlign='right'; a.style.color = textColor; a.style.opacity=0.9; a.textContent = s.data.author || '';
+    container.appendChild(q); container.appendChild(a);
+  } else if(s.type === 'two'){
+    const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.gap='12px';
+    const left = document.createElement('div'); left.style.flex='1'; left.style.color = textColor; left.textContent = s.data.left || '';
+    const right = document.createElement('div'); right.style.flex='1'; right.style.color = textColor; right.textContent = s.data.right || '';
+    wrap.appendChild(left); wrap.appendChild(right); container.appendChild(wrap);
+  } else if(s.type === 'highlight'){
+    const box = document.createElement('div'); box.style.padding='12px'; box.style.borderRadius='8px'; box.style.background='linear-gradient(90deg,var(--q-yellow),rgba(255,255,255,0.02))';
+    box.style.color = '#021'; box.style.fontWeight='800'; box.textContent = s.data.content || '';
+    container.appendChild(box);
+  }
 
-  previewStage.appendChild(container);
-  document.getElementById('currentLabel').textContent = `Slide: ${currentIndex+1}/${slides.length}`;
+  previewStage.appendChild(container);
+  document.getElementById('currentLabel').textContent = `Slide: ${currentIndex+1}/${slides.length}`;
 }
 
 /* navigation */
 document.getElementById('prevBtn').addEventListener('click', ()=> {
-  currentIndex = Math.max(0, currentIndex-1); renderPreview();
+  currentIndex = Math.max(0, currentIndex-1); renderPreview();
 });
 document.getElementById('nextBtn').addEventListener('click', ()=> {
-  currentIndex = Math.min(slides.length-1, currentIndex+1); renderPreview();
+  currentIndex = Math.min(slides.length-1, currentIndex+1); renderPreview();
 });
 
 /* Save sermon (create or update) */
 document.getElementById('saveBtn').addEventListener('click', async ()=> {
-  const title = titleEl.value.trim();
-  if(!title) return alert('Digite o título do sermão');
-  const payload = { title, slides, date: new Date().toISOString() };
-  try {
-    const base = baseUrl();
-    let res;
-    if(editingId){
-      res = await fetch(base + '/api/sermons/' + encodeURIComponent(editingId), { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-    } else {
-      res = await fetch(base + '/api/sermons', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-    }
-    if(!res.ok) throw new Error('Erro ' + res.status);
-    const j = await res.json(); editingId = j.id; alert('Sermão salvo'); loadSermons();
-  } catch(e){ alert('Erro ao salvar: ' + e.message); }
+  const title = titleEl.value.trim();
+  if(!title) return alert('Digite o título do sermão');
+  const payload = { title, slides, date: new Date().toISOString() };
+  try {
+    const base = baseUrl();
+    let res;
+    if(editingId){
+      res = await fetch(base + '/api/sermons/' + encodeURIComponent(editingId), { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    } else {
+      res = await fetch(base + '/api/sermons', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    }
+    if(!res.ok) throw new Error('Erro ' + res.status);
+    const j = await res.json(); editingId = j.id; alert('Sermão salvo'); loadSermons();
+  } catch(e){ alert('Erro ao salvar: ' + e.message); }
 });
 
 /* Load list of sermons */
 async function loadSermons(){
-  try {
-    const base = baseUrl();
-    const res = await fetch(base + '/api/sermons');
-    if(!res.ok) throw new Error('Erro ' + res.status);
-    const items = await res.json(); renderSermonList(items);
-  } catch(e){ alert('Erro: ' + e.message); }
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons');
+    if(!res.ok) throw new Error('Erro ' + res.status);
+    const items = await res.json(); renderSermonList(items);
+  } catch(e){ alert('Erro: ' + e.message); }
 }
 function renderSermonList(items){
-  sermonList.innerHTML = '';
-  if(!items || items.length === 0) { sermonList.innerHTML = '<div class="small">Nenhum sermão</div>'; return; }
-  items.forEach(it => {
-    const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.padding='8px'; row.style.borderRadius='6px'; row.style.background='rgba(255,255,255,0.01)'; row.style.marginBottom='6px';
-    const left = document.createElement('div'); left.innerHTML = `<div style="font-weight:800;color:var(--q-yellow)">${escapeHtml(it.title)}</div><div class="small">${it.date || ''}</div>`;
-    const right = document.createElement('div'); right.style.display='flex'; right.style.gap='6px';
-    const btnLoad = document.createElement('button'); btnLoad.className='btn btn-ghost'; btnLoad.textContent='Carregar'; btnLoad.onclick = ()=> loadSermon(it.id);
-    const btnSend = document.createElement('button'); btnSend.className='btn btn-primary'; btnSend.textContent='Projeção'; btnSend.onclick = ()=> sendSermonToDisplay(it.id);
-    const btnDel = document.createElement('button'); btnDel.className='btn'; btnDel.style.color='#ffb4b4'; btnDel.textContent='Excluir'; btnDel.onclick = ()=> { if(confirm('Excluir?')) deleteSermon(it.id); };
-    right.appendChild(btnSend); right.appendChild(btnLoad); right.appendChild(btnDel);
-    row.appendChild(left); row.appendChild(right); sermonList.appendChild(row);
-  });
+  sermonList.innerHTML = '';
+  if(!items || items.length === 0) { sermonList.innerHTML = '<div class="small">Nenhum sermão</div>'; return; }
+  items.forEach(it => {
+    const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.padding='8px'; row.style.borderRadius='6px'; row.style.background='rgba(255,255,255,0.01)'; row.style.marginBottom='6px';
+    const left = document.createElement('div'); left.innerHTML = `<div style="font-weight:800;color:var(--q-yellow)">${escapeHtml(it.title)}</div><div class="small">${it.date || ''}</div>`;
+    const right = document.createElement('div'); right.style.display='flex'; right.style.gap='6px';
+    const btnLoad = document.createElement('button'); btnLoad.className='btn btn-ghost'; btnLoad.textContent='Carregar'; btnLoad.onclick = ()=> loadSermon(it.id);
+    const btnSend = document.createElement('button'); btnSend.className='btn btn-primary'; btnSend.textContent='Projeção'; btnSend.onclick = ()=> sendSermonToDisplay(it.id);
+    const btnDel = document.createElement('button'); btnDel.className='btn'; btnDel.style.color='#ffb4b4'; btnDel.textContent='Excluir'; btnDel.onclick = ()=> { if(confirm('Excluir?')) deleteSermon(it.id); };
+    right.appendChild(btnSend); right.appendChild(btnLoad); right.appendChild(btnDel);
+    row.appendChild(left); row.appendChild(right); sermonList.appendChild(row);
+  });
 }
 
 /* load single sermon */
 async function loadSermon(id){
-  try {
-    const base = baseUrl();
-    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id));
-    if(!res.ok) throw new Error('Não encontrado');
-    const s = await res.json();
-    editingId = s.id; titleEl.value = s.title || '';
-    slides = s.slides || []; currentIndex = 0; renderSlides();
-  } catch(e){ alert('Erro: ' + e.message); }
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id));
+    if(!res.ok) throw new Error('Não encontrado');
+    const s = await res.json();
+    editingId = s.id; titleEl.value = s.title || '';
+    slides = s.slides || []; currentIndex = 0; renderSlides();
+  } catch(e){ alert('Erro: ' + e.message); }
 }
 
 /* delete sermon */
 async function deleteSermon(id){
-  try {
-    const base = baseUrl();
-    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id), { method:'DELETE' });
-    if(!res.ok) throw new Error('Erro ao excluir');
-    alert('Excluído'); loadSermons();
-  } catch(e){ alert('Erro: ' + e.message); }
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id), { method:'DELETE' });
+    if(!res.ok) throw new Error('Erro ao excluir');
+    alert('Excluído'); loadSermons();
+  } catch(e){ alert('Erro: ' + e.message); }
 }
 
 /* send sermon to display (by id) */
-async function sendSermonToDisplay(id, startIndex=0){
-  try {
-    const base = baseUrl();
-    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id));
-    if(!res.ok) throw new Error('Não encontrado');
-    const s = await res.json();
-    currentSermon = s; currentIndex = startIndex || 0;
-    if(ws && ws.readyState === WebSocket.OPEN){
-      // send full sermon and optionally instruct display to jump to startIndex
-      ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: s }));
-      if(typeof startIndex === 'number' && startIndex > 0){
-        // small delay to ensure display processed load
-        setTimeout(()=> {
-          ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index: startIndex }));
-        }, 120);
-      }
-      alert('Sermão enviado ao telão');
-    } else alert('WebSocket não conectado');
-  } catch(e){ alert('Erro: ' + e.message); }
-}
-
-/* NEW: sendSingleSlideToDisplay: sends only one slide (as a sermon with single slide) */
-function sendSingleSlideToDisplay(slide){
-  if(!slide) return alert('Slide inválido');
-  const tempSermon = { id: null, title: titleEl.value || 'Slide (enviado)', slides: [slide] };
-  if(ws && ws.readyState === WebSocket.OPEN){
-    ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: tempSermon }));
-    alert('Slide enviado ao telão');
-  } else alert('WebSocket não conectado');
-}
-
-/* NEW: sendSermonAndGotoById: fetch sermon and send, then goto index */
-async function sendSermonAndGotoById(id, index){
-  try {
-    const base = baseUrl();
-    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id));
-    if(!res.ok) throw new Error('Não encontrado');
-    const s = await res.json();
-    currentSermon = s; currentIndex = index || 0;
-    if(ws && ws.readyState === WebSocket.OPEN){
-      ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: s }));
-      if(typeof index === 'number' && index > 0){
-        setTimeout(()=> ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index })), 120);
-      }
-      alert('Sermão enviado ao telão (iniciando no slide ' + (index+1) + ')');
-    } else alert('WebSocket não conectado');
-  } catch(e){ alert('Erro: ' + e.message); }
-}
-
-/* NEW: send sermon object and then goto index (for unsaved sermons) */
-function sendSermonObjectAndGoto(sermonObj, index){
-  if(!sermonObj) return alert('Nada para enviar');
-  if(ws && ws.readyState === WebSocket.OPEN){
-    ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: sermonObj }));
-    if(typeof index === 'number' && index > 0){
-      setTimeout(()=> ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index })), 120);
-    }
-    alert('Sermão (não salvo) enviado ao telão (iniciando no slide ' + (index+1) + ')');
-  } else alert('WebSocket não conectado');
+async function sendSermonToDisplay(id){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id));
+    if(!res.ok) throw new Error('Não encontrado');
+    const s = await res.json();
+    currentSermon = s; currentIndex = 0;
+    if(ws && ws.readyState === WebSocket.OPEN){
+      ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: s }));
+      alert('Sermão enviado ao telão');
+    } else alert('WebSocket não conectado');
+  } catch(e){ alert('Erro: ' + e.message); }
 }
 
 /* save current form then send */
 document.getElementById('sendBtn').addEventListener('click', async ()=> {
-  // trigger click on save button programmatically and await small delay for DB write
-  await document.getElementById('saveBtn').click();
-  // If editingId exists after save, send saved sermon
-  if(editingId){
-    // wait a bit for DB write race conditions (server speed dependent)
-    setTimeout(()=> sendSermonToDisplay(editingId, 0), 250);
-  } else {
-    // fallback: send current slides as unsaved sermon
-    const temp = { id:null, title: titleEl.value || 'Sermão (não salvo)', slides: slides };
-    sendSermonObjectAndGoto(temp, 0);
-  }
+  await document.getElementById('saveBtn').click();
+  if(!editingId) return;
+  sendSermonToDisplay(editingId);
 });
 
 /* connect websocket */
 document.getElementById('connectWS').addEventListener('click', ()=> {
-  const url = wsUrlEl.value.trim();
-  if(!url) return alert('Informe ws://host:port');
-  try {
-    ws = new WebSocket(url);
-    ws.addEventListener('open', ()=> { document.getElementById('status').textContent = 'Conectado'; ws.send(JSON.stringify({ type:'hello', role:'panel', room: roomEl.value.trim() })); });
-    ws.addEventListener('message', (ev)=> console.log('ws msg', ev.data));
-    ws.addEventListener('close', ()=> document.getElementById('status').textContent = 'Desconectado');
-    ws.addEventListener('error', ()=> document.getElementById('status').textContent = 'Erro');
-  } catch(e){ alert('Erro WS: ' + e.message); }
+  const url = wsUrlEl.value.trim();
+  if(!url) return alert('Informe ws://host:port');
+  try {
+    ws = new WebSocket(url);
+    ws.addEventListener('open', ()=> { document.getElementById('status').textContent = 'Conectado'; ws.send(JSON.stringify({ type:'hello', role:'panel', room: roomEl.value.trim() })); });
+    ws.addEventListener('message', (ev)=> console.log('ws msg', ev.data));
+    ws.addEventListener('close', ()=> document.getElementById('status').textContent = 'Desconectado');
+    ws.addEventListener('error', ()=> document.getElementById('status').textContent = 'Erro');
+  } catch(e){ alert('Erro WS: ' + e.message); }
 });
+
+/* quick load & delete */
+async function deleteSermon(id){ /* duplicate safe: handled earlier */ }
 
 /* utility: send goto */
 function gotoIndex(i){
-  if(!currentSermon && slides.length === 0) { alert('Nada para controlar'); return; }
-  const max = currentSermon ? currentSermon.slides.length - 1 : slides.length - 1;
-  currentIndex = Math.max(0, Math.min(max, i));
-  if(ws && ws.readyState === WebSocket.OPEN){
-    ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index: currentIndex }));
-  }
-  renderPreview();
+  if(!currentSermon && slides.length === 0) { alert('Nada para controlar'); return; }
+  const max = currentSermon ? currentSermon.slides.length - 1 : slides.length - 1;
+  currentIndex = Math.max(0, Math.min(max, i));
+  if(ws && ws.readyState === WebSocket.OPEN){
+    ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index: currentIndex }));
+  }
+  renderPreview();
 }
 
 /* prev/next buttons handled earlier */
@@ -537,20 +463,20 @@ document.getElementById('saveBtn').addEventListener('click', ()=> {}); // bound 
 
 /* deletion wrapper */
 async function deleteSermon(id){
-  try {
-    const base = baseUrl();
-    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id), { method: 'DELETE' });
-    if(!res.ok) throw new Error('Erro');
-    alert('Excluído'); loadSermons();
-  } catch(e){ alert('Erro: ' + e.message); }
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id), { method: 'DELETE' });
+    if(!res.ok) throw new Error('Erro');
+    alert('Excluído'); loadSermons();
+  } catch(e){ alert('Erro: ' + e.message); }
 }
 
 /* init */
 renderSlides(); loadSermons();
 document.addEventListener('keydown', (e)=> {
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); document.getElementById('saveBtn').click(); }
-  if(e.key === 'ArrowRight') document.getElementById('nextBtn').click();
-  if(e.key === 'ArrowLeft') document.getElementById('prevBtn').click();
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); document.getElementById('saveBtn').click(); }
+  if(e.key === 'ArrowRight') document.getElementById('nextBtn').click();
+  if(e.key === 'ArrowLeft') document.getElementById('prevBtn').click();
 });
 </script>
 </body>
