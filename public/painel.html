@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Painel do Pastor — IQBJ (Editor avançado)</title>
+<style>
+  :root{
+    --q-red:#c0392b; --q-yellow:#f6c85f; --q-blue:#2b6cb0; --q-purple:#7c3aed;
+    --bg:linear-gradient(180deg,#051122,#08172a);
+    --card:rgba(255,255,255,0.03);
+    --muted:#bcd2ea;
+  }
+  html,body{height:100%;margin:0;font-family:Inter,Arial; background:var(--bg); color:#eaf4ff}
+  .wrap{max-width:1200px;margin:12px auto;display:grid;grid-template-columns:1fr 360px;gap:12px;padding:12px}
+  .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+  h1{margin:0 0 6px;color:var(--q-yellow)}
+  label{display:block;font-weight:700;color:#dff0ff;margin-bottom:6px}
+  input,textarea,select,button{font:inherit}
+  input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+  textarea{min-height:60px;resize:vertical}
+  .btn{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+  .btn-primary{background:linear-gradient(90deg,var(--q-purple),var(--q-blue));color:#021}
+  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#cfe6ff}
+  .slides-list{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  .slide-editor{display:flex;gap:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01);align-items:flex-start}
+  .slide-meta{flex:1}
+  .small{font-size:13px;color:#bcd2ea}
+  .preview{margin-top:12px;padding:12px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.005))}
+  .theme-select{display:flex;gap:8px}
+  .slide-actions-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  @media(max-width:1000px){.wrap{grid-template-columns:1fr}}
+  code{background:rgba(255,255,255,0.02);padding:2px 6px;border-radius:4px}
+
+/* sermon/slide list visuals */
+.sermon-row{padding:8px;border-radius:8px;background:rgba(255,255,255,0.01);margin-bottom:8px;display:block}
+.sermon-header{display:flex;justify-content:space-between;align-items:center}
+.slide-list{margin-top:8px;padding-left:10px}
+.slide-item{display:flex;justify-content:space-between;align-items:center;padding:6px;border-radius:6px;background:rgba(255,255,255,0.01);margin-bottom:6px}
+.slide-title{flex:1;margin-right:8px;color:#eaf4ff}
+.slide-actions button{margin-left:6px}
+.btn-send{background:#2bb673;color:#021}
+.btn-load{background:#f6c85f;color:#021}
+.btn-delete{background:#c0392b;color:#fff}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <main class="card" aria-live="polite">
+      <h1>Painel do Pastor — Editor Avançado</h1>
+      <div class="small">Templates, estilos por slide, imagens de fundo, e controle do telão.</div>
+
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <div style="flex:1">
+          <label>Servidor HTTP</label>
+          <input id="serverHttp" placeholder="Ex: http://192.168.7.71:3000"/>
+        </div>
+        <div style="width:160px">
+          <label>Room</label>
+          <input id="room" value="iqbj_sala1"/>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <label>Título do Sermão</label>
+        <input id="title" placeholder="Título do sermão"/>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+        <label style="margin:0">Adicionar Slide</label>
+        <select id="templateSelect" style="flex:1">
+          <option value="title">Título</option>
+          <option value="bullet">Tópico (bullets)</option>
+          <option value="verse">Versículo</option>
+          <option value="image">Imagem</option>
+          <option value="quote">Citação</option>
+          <option value="two">Duas Colunas</option>
+          <option value="highlight">Caixa de Destaque</option>
+        </select>
+        <button class="btn btn-primary" id="addSlideBtn">Adicionar</button>
+      </div>
+
+      <div class="slides-list" id="slidesList" aria-live="polite"></div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="saveBtn">Salvar no BD</button>
+        <button class="btn btn-ghost" id="newBtn">Novo Sermão</button>
+        <button class="btn btn-ghost" id="loadBtn">Carregar Sermões</button>
+        <button class="btn btn-primary" id="sendBtn">Salvar & Enviar ao Telão</button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+        <button class="btn btn-primary" id="prevBtn">Anterior</button>
+        <button class="btn btn-primary" id="nextBtn">Próximo</button>
+        <div id="currentLabel" class="small" style="margin-left:8px">Slide: -</div>
+      </div>
+
+      <section style="margin-top:14px">
+        <strong style="color:var(--q-yellow)">Pré-visualização Rápida</strong>
+        <div id="preview" class="preview"><div id="previewStage" style="min-height:120px;display:flex;align-items:center;justify-content:center"></div></div>
+      </section>
+
+      <section style="margin-top:14px">
+        <strong style="color:var(--q-yellow)">Sermões Salvos</strong>
+        <div id="sermonList" style="margin-top:8px"></div>
+      </section>
+    </main>
+
+    <aside class="card" aria-hidden>
+      <div>
+        <label>Conectar WebSocket</label>
+        <div style="display:flex;gap:8px">
+          <input id="wsUrl" placeholder="ws://192.168.7.71:3000"/>
+          <button class="btn btn-primary" id="connectWS">Conectar</button>
+        </div>
+        <div id="status" class="small" style="margin-top:8px">Desconectado</div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Temas Rápidos</label>
+        <div class="theme-select" style="margin-top:8px">
+          <button class="btn btn-ghost" data-theme="quadrangular">Quadrangular</button>
+          <button class="btn btn-ghost" data-theme="dark">Escuro</button>
+          <button class="btn btn-ghost" data-theme="light">Claro</button>
+        </div>
+        <div class="small" style="margin-top:8px">Clique em um tema para aplicá-lo ao slide selecionado.</div>
+      </div>
+
+      <div style="margin-top:12px">
+        <strong class="small">Dicas</strong>
+        <div class="small">• Abra no PC: <code>http://IP:3000/tela.html?room=iqbj_sala1</code><br/>• No painel informe <code>ws://IP:3000</code> e clique Conectar.</div>
+      </div>
+    </aside>
+  </div>
+
+<script>
+/* Panel script:
+   - templates
+   - slide-level style: textColor, bgColor, bgImage (dataURL), theme
+   - CRUD via REST
+   - WebSocket for realtime control
+*/
+
+const TEMPLATES = {
+  title:{type:'title', label:'Título', fields:['content','subtitle']},
+  bullet:{type:'bullet', label:'Tópico', fields:['lines']},
+  verse:{type:'verse', label:'Versículo', fields:['verseText','reference']},
+  image:{type:'image', label:'Imagem', fields:['imageUrl','caption']},
+  quote:{type:'quote', label:'Citação', fields:['content','author']},
+  two:{type:'two', label:'Duas Colunas', fields:['left','right']},
+  highlight:{type:'highlight', label:'Destaque', fields:['content']}
+};
+
+const serverHttpEl = document.getElementById('serverHttp');
+const wsUrlEl = document.getElementById('wsUrl');
+const roomEl = document.getElementById('room');
+const titleEl = document.getElementById('title');
+const slidesList = document.getElementById('slidesList');
+const previewStage = document.getElementById('previewStage');
+const sermonList = document.getElementById('sermonList');
+const templateSelect = document.getElementById('templateSelect');
+
+let slides = []; // each slide: { type, data: {...}, style: { textColor, bgColor, bgImage, theme } }
+let editingId = null;
+let ws = null;
+let currentIndex = 0;
+let currentSermon = null;
+
+/* small utility functions */
+function uid(){ return 's_'+Math.random().toString(36).slice(2,9); }
+function baseUrl(){ const v = serverHttpEl.value.trim(); return v ? v.replace(/\/$/,'') : window.location.origin; }
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+function showError(msg){ alert(msg); console.error(msg); }
+
+/* apply theme quick presets to style object */
+function applyThemeToStyle(style, theme){
+  if(!style) style = {};
+  if(theme === 'quadrangular'){
+    style.textColor = '#ffffff';
+    style.bgColor = '#061426';
+    style.bgImage = null;
+  } else if(theme === 'dark'){
+    style.textColor = '#ffffff';
+    style.bgColor = '#0b0f14';
+    style.bgImage = null;
+  } else if(theme === 'light'){
+    style.textColor = '#001022';
+    style.bgColor = '#ffffff';
+    style.bgImage = null;
+  }
+}
+
+/* Render slides editors */
+function renderSlides(){
+  slidesList.innerHTML = '';
+  slides.forEach((s,i) => {
+    const row = document.createElement('div'); row.className = 'slide-editor';
+    const meta = document.createElement('div'); meta.className = 'slide-meta';
+    meta.innerHTML = `<div style="font-weight:800">Slide ${i+1} — ${escapeHtml(TEMPLATES[s.type].label)}</div>`;
+
+    // add field inputs
+    (TEMPLATES[s.type].fields || []).forEach(f => {
+      const wrapper = document.createElement('div'); wrapper.style.marginTop='8px';
+      if(f === 'lines'){
+        const ta = document.createElement('textarea'); ta.placeholder = 'Uma linha por bullet';
+        ta.value = (s.data && s.data.lines) ? s.data.lines.join('\n') : '';
+        ta.addEventListener('input', ()=> s.data.lines = ta.value.split('\n').map(x=>x.trim()).filter(Boolean));
+        wrapper.appendChild(ta);
+      } else if(f === 'imageUrl'){
+        const inp = document.createElement('input'); inp.placeholder = 'URL da imagem (ou use upload abaixo)';
+        inp.value = s.data && s.data.imageUrl ? s.data.imageUrl : '';
+        inp.addEventListener('input', ()=> s.data.imageUrl = inp.value.trim());
+        wrapper.appendChild(inp);
+        // file upload
+        const file = document.createElement('input'); file.type='file'; file.accept='image/*'; file.style.marginTop='6px';
+        file.addEventListener('change', (ev)=>{
+          const fobj = ev.target.files[0]; if(!fobj) return;
+          const reader = new FileReader();
+          reader.onload = () => { s.data.imageUrl = reader.result; renderPreview(); renderSlides(); };
+          reader.readAsDataURL(fobj);
+        });
+        wrapper.appendChild(file);
+      } else {
+        const inp = (f==='content' || f==='verseText' || f==='left' || f==='right') ? document.createElement('textarea') : document.createElement('input');
+        inp.placeholder = f;
+        inp.value = s.data && s.data[f] ? s.data[f] : '';
+        inp.addEventListener('input', ()=> s.data[f] = inp.value);
+        wrapper.appendChild(inp);
+      }
+      meta.appendChild(wrapper);
+    });
+
+    // style controls: text color, background color, upload background image, theme selector
+    const styleBox = document.createElement('div'); styleBox.style.marginTop='8px';
+    styleBox.innerHTML = `<div style="font-weight:700;margin-bottom:6px">Estilo do Slide</div>`;
+    const textColorInp = document.createElement('input'); textColorInp.type='color'; textColorInp.value = (s.style && s.style.textColor) ? s.style.textColor : '#ffffff';
+    textColorInp.addEventListener('input', ()=> { s.style = s.style || {}; s.style.textColor = textColorInp.value; renderPreview(); });
+    const bgColorInp = document.createElement('input'); bgColorInp.type='color'; bgColorInp.value = (s.style && s.style.bgColor) ? s.style.bgColor : '#041226';
+    bgColorInp.addEventListener('input', ()=> { s.style = s.style || {}; s.style.bgColor = bgColorInp.value; s.style.bgImage = null; renderPreview(); });
+
+    const bgFile = document.createElement('input'); bgFile.type='file'; bgFile.accept='image/*'; bgFile.style.display='block'; bgFile.style.marginTop='6px';
+    bgFile.addEventListener('change', (ev)=> {
+      const fobj = ev.target.files[0]; if(!fobj) return;
+      const reader = new FileReader();
+      reader.onload = ()=> { s.style = s.style || {}; s.style.bgImage = reader.result; renderPreview(); renderSlides(); };
+      reader.readAsDataURL(fobj);
+    });
+
+    const themeSel = document.createElement('select'); themeSel.style.marginTop='6px';
+    ['','quadrangular','dark','light'].forEach(t => {
+      const o = document.createElement('option'); o.value = t; o.textContent = t ? t : 'Sem tema';
+      themeSel.appendChild(o);
+    });
+    themeSel.value = (s.style && s.style.theme) ? s.style.theme : '';
+    themeSel.addEventListener('change', ()=> { s.style = s.style || {}; s.style.theme = themeSel.value; applyThemeToStyle(s.style, themeSel.value); renderPreview(); renderSlides(); });
+
+    const rowStyles = document.createElement('div'); rowStyles.style.display='flex'; rowStyles.style.gap='8px'; rowStyles.style.marginTop='6px';
+    const labelTextColor = document.createElement('div'); labelTextColor.textContent='Cor do texto:'; labelTextColor.style.fontSize='13px'; labelTextColor.style.color='#cfe6ff';
+    const labelBgColor = document.createElement('div'); labelBgColor.textContent='Cor de fundo:'; labelBgColor.style.fontSize='13px'; labelBgColor.style.color='#cfe6ff';
+    rowStyles.appendChild(labelTextColor); rowStyles.appendChild(textColorInp); rowStyles.appendChild(labelBgColor); rowStyles.appendChild(bgColorInp);
+    styleBox.appendChild(rowStyles);
+    styleBox.appendChild(document.createTextNode('Imagem de fundo: ')); styleBox.appendChild(bgFile);
+    styleBox.appendChild(document.createElement('div')); styleBox.appendChild(document.createTextNode('Tema: ')); styleBox.appendChild(themeSel);
+
+    meta.appendChild(styleBox);
+
+    const actions = document.createElement('div'); actions.style.display='flex'; actions.style.flexDirection='column'; actions.style.gap='6px';
+    const btnUp = document.createElement('button'); btnUp.className='btn btn-ghost'; btnUp.textContent='↑'; btnUp.onclick = ()=> { if(i>0){ slides.splice(i-1,0,slides.splice(i,1)[0]); renderSlides(); } };
+    const btnDown = document.createElement('button'); btnDown.className='btn btn-ghost'; btnDown.textContent='↓'; btnDown.onclick = ()=> { if(i<slides.length-1){ slides.splice(i+1,0,slides.splice(i,1)[0]); renderSlides(); } };
+    const btnDel = document.createElement('button'); btnDel.className='btn'; btnDel.style.color='#ffb4b4'; btnDel.textContent='Excluir'; btnDel.onclick = ()=> { if(confirm('Remover slide?')){ slides.splice(i,1); renderSlides(); } };
+
+    // Send actions
+    const sendThis = document.createElement('button'); sendThis.className = 'btn btn-primary'; sendThis.textContent = 'Enviar este slide';
+    sendThis.title = 'Envia apenas este slide ao telão';
+    sendThis.onclick = ()=> sendSingleSlideToDisplay(s);
+
+    const sendFromHere = document.createElement('button'); sendFromHere.className = 'btn btn-ghost'; sendFromHere.textContent = 'Iniciar a partir daqui';
+    sendFromHere.title = 'Envia o sermão completo e inicia o telão neste slide';
+    sendFromHere.onclick = ()=> {
+      if(editingId){
+        sendSermonAndGotoById(editingId, i);
+      } else {
+        const tempSermon = { id: null, title: titleEl.value || 'Sermão (não salvo)', slides: slides };
+        sendSermonObjectAndGoto(tempSermon, i);
+      }
+    };
+
+    actions.appendChild(btnUp); actions.appendChild(btnDown); actions.appendChild(btnDel);
+    actions.appendChild(sendThis); actions.appendChild(sendFromHere);
+
+    row.appendChild(meta); row.appendChild(actions);
+    slidesList.appendChild(row);
+  });
+  renderPreview();
+}
+
+/* preview render */
+function renderPreview(){
+  previewStage.innerHTML = '';
+  if(slides.length === 0){ previewStage.innerHTML = '<div class="small">Nenhum slide</div>'; document.getElementById('currentLabel').textContent = 'Slide: -'; return; }
+  const s = slides[currentIndex] || slides[0];
+  const container = document.createElement('div');
+  container.style.width = '100%';
+  container.style.padding = '14px';
+  container.style.borderRadius = '8px';
+  container.style.boxSizing = 'border-box';
+  // apply style
+  const style = s.style || {};
+  if(style.bgImage){
+    container.style.backgroundImage = `url(${style.bgImage})`;
+    container.style.backgroundSize = 'cover';
+    container.style.backgroundPosition = 'center';
+  } else {
+    container.style.background = style.bgColor || '#041226';
+  }
+  const textColor = style.textColor || '#ffffff';
+  // content per type
+  if(s.type === 'title'){
+    const h = document.createElement('div'); h.style.fontSize = '24px'; h.style.fontWeight = '800'; h.style.color = textColor;
+    h.textContent = s.data.content || titleEl.value || 'Título';
+    const sub = document.createElement('div'); sub.style.color = textColor; sub.style.opacity = 0.9; sub.style.marginTop = '6px';
+    sub.textContent = s.data.subtitle || '';
+    container.appendChild(h); container.appendChild(sub);
+  } else if(s.type === 'bullet'){
+    const ul = document.createElement('ul'); ul.style.color = textColor; ul.style.margin='6px 0 0 18px';
+    (s.data.lines || []).forEach(li => { const liEl = document.createElement('li'); liEl.textContent = li; liEl.style.marginBottom='6px'; ul.appendChild(liEl); });
+    container.appendChild(ul);
+  } else if(s.type === 'verse'){
+    const v = document.createElement('div'); v.style.fontStyle='italic'; v.style.color = textColor; v.textContent = s.data.verseText || '';
+    const ref = document.createElement('div'); ref.style.textAlign='right'; ref.style.color = textColor; ref.style.opacity = 0.9; ref.style.marginTop='6px'; ref.textContent = s.data.reference || '';
+    container.appendChild(v); container.appendChild(ref);
+  } else if(s.type === 'image'){
+    const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.justifyContent='center';
+    const img = document.createElement('img'); img.src = s.data.imageUrl || ''; img.style.maxWidth = '80%'; img.style.maxHeight = '220px'; img.style.borderRadius='8px';
+    wrap.appendChild(img);
+    const cap = document.createElement('div'); cap.style.color = textColor; cap.style.marginTop='6px'; cap.textContent = s.data.caption || '';
+    container.appendChild(wrap); container.appendChild(cap);
+  } else if(s.type === 'quote'){
+    const q = document.createElement('div'); q.style.fontSize='20px'; q.style.fontWeight='800'; q.style.color = textColor; q.textContent = `“${s.data.content || ''}”`;
+    const a = document.createElement('div'); a.style.textAlign='right'; a.style.color = textColor; a.style.opacity=0.9; a.textContent = s.data.author || '';
+    container.appendChild(q); container.appendChild(a);
+  } else if(s.type === 'two'){
+    const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.gap='12px';
+    const left = document.createElement('div'); left.style.flex='1'; left.style.color = textColor; left.textContent = s.data.left || '';
+    const right = document.createElement('div'); right.style.flex='1'; right.style.color = textColor; right.textContent = s.data.right || '';
+    wrap.appendChild(left); wrap.appendChild(right); container.appendChild(wrap);
+  } else if(s.type === 'highlight'){
+    const box = document.createElement('div'); box.style.padding='12px'; box.style.borderRadius='8px'; box.style.background='linear-gradient(90deg,var(--q-yellow),rgba(255,255,255,0.02))';
+    box.style.color = '#021'; box.style.fontWeight='800'; box.textContent = s.data.content || '';
+    container.appendChild(box);
+  }
+
+  previewStage.appendChild(container);
+  document.getElementById('currentLabel').textContent = `Slide: ${currentIndex+1}/${slides.length}`;
+}
+
+/* navigation helpers */
+function gotoIndex(i){
+  if(!currentSermon && slides.length === 0) { alert('Nada para controlar'); return; }
+  const max = currentSermon ? currentSermon.slides.length - 1 : slides.length - 1;
+  currentIndex = Math.max(0, Math.min(max, i));
+  if(ws && ws.readyState === WebSocket.OPEN){
+    ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index: currentIndex }));
+  }
+  renderPreview();
+}
+
+/* prev/next */
+document.getElementById('prevBtn').addEventListener('click', ()=> gotoIndex(currentIndex-1));
+document.getElementById('nextBtn').addEventListener('click', ()=> gotoIndex(currentIndex+1));
+
+/* add new slide */
+document.getElementById('addSlideBtn').addEventListener('click', ()=> {
+  const t = templateSelect.value;
+  const defData = {};
+  (TEMPLATES[t].fields || []).forEach(f => { if(f==='lines') defData.lines = []; else defData[f] = ''; });
+  const defStyle = { textColor: '#ffffff', bgColor: '#041226', bgImage: null, theme: 'quadrangular' };
+  slides.push({ type: t, data: defData, style: defStyle });
+  renderSlides();
+});
+
+/* CRUD REST functions ---------------------------------- */
+/* saveSermon: used by Save button and by Send (which awaits it) */
+async function saveSermon(){
+  const title = titleEl.value.trim();
+  if(!title) { alert('Digite o título do sermão'); throw new Error('no-title'); }
+  const payload = { title, slides, date: new Date().toISOString() };
+  const base = baseUrl();
+  let res;
+  if(editingId){
+    res = await fetch(base + '/api/sermons/' + encodeURIComponent(editingId), { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  } else {
+    res = await fetch(base + '/api/sermons', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  }
+  if(!res.ok) throw new Error('Erro ' + res.status);
+  const j = await res.json();
+  editingId = j.id || editingId || j._id || null;
+  await loadSermons();
+  return editingId;
+}
+
+document.getElementById('saveBtn').addEventListener('click', async ()=>{
+  try {
+    await saveSermon();
+    alert('Sermão salvo');
+  } catch(e){
+    if(e.message !== 'no-title') alert('Erro ao salvar: ' + e.message);
+  }
+});
+
+/* load list of sermons */
+async function loadSermons(){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons');
+    if(!res.ok) throw new Error('Erro ' + res.status);
+    const items = await res.json(); renderSermonList(items);
+  } catch(e){ sermonList.innerHTML = '<div class="small">Erro ao carregar sermões</div>'; console.error(e); }
+}
+
+/* RENDER sermon list with slides and per-slide actions */
+function renderSermonList(items){
+  sermonList.innerHTML = '';
+  if(!items || items.length === 0) { sermonList.innerHTML = '<div class="small">Nenhum sermão</div>'; return; }
+
+  items.forEach(it => {
+    const sid = it.id || it._id;
+    const row = document.createElement('div'); row.className = 'sermon-row';
+    const header = document.createElement('div'); header.className = 'sermon-header';
+    header.innerHTML = `<div><div style="font-weight:800;color:var(--q-yellow)">${escapeHtml(it.title)}</div><div class="small">${it.date || ''}</div></div>`;
+    const headerActions = document.createElement('div');
+    const btnSend = document.createElement('button'); btnSend.className = 'btn btn-primary'; btnSend.textContent = 'Projeção'; btnSend.onclick = ()=> sendSermonToDisplay(sid);
+    const btnLoad = document.createElement('button'); btnLoad.className = 'btn btn-ghost'; btnLoad.textContent = 'Carregar'; btnLoad.onclick = ()=> loadSermon(sid);
+    const btnDel = document.createElement('button'); btnDel.className = 'btn'; btnDel.style.color='#ffb4b4'; btnDel.textContent='Excluir'; btnDel.onclick = ()=> { if(confirm('Excluir sermão?')) deleteSermon(sid); };
+    headerActions.appendChild(btnSend); headerActions.appendChild(btnLoad); headerActions.appendChild(btnDel);
+    header.appendChild(headerActions);
+    row.appendChild(header);
+
+    // Slides list
+    const slidesContainer = document.createElement('div'); slidesContainer.className = 'slide-list';
+    if(it.slides && it.slides.length){
+      it.slides.forEach((sl, idx) => {
+        const item = document.createElement('div'); item.className = 'slide-item';
+        const summary = document.createElement('div'); summary.className = 'slide-title';
+        // create a friendly text summary depending on slide shape
+        let txt = '';
+        if(typeof sl === 'string') txt = sl;
+        else if(sl.type === 'title') txt = (sl.data && sl.data.content) ? sl.data.content : 'Título';
+        else if(sl.type === 'bullet') txt = (sl.data && sl.data.lines) ? (sl.data.lines[0] || '') : 'Tópico';
+        else if(sl.type === 'verse') txt = (sl.data && sl.data.verseText) ? sl.data.verseText : 'Versículo';
+        else txt = JSON.stringify(sl).slice(0,80);
+        summary.textContent = `Slide ${idx+1}: ${txt.length>120?txt.slice(0,120)+'...':txt}`;
+
+        const actions = document.createElement('div'); actions.className = 'slide-actions';
+        const sendBtn = document.createElement('button'); sendBtn.className = 'btn btn-send'; sendBtn.textContent = 'Enviar'; sendBtn.onclick = ()=> sendSavedSlide(sid, idx);
+        const loadBtn = document.createElement('button'); loadBtn.className = 'btn btn-load'; loadBtn.textContent = 'Carregar'; loadBtn.onclick = ()=> loadSavedSlide(sid, idx);
+        const delBtn = document.createElement('button'); delBtn.className = 'btn btn-delete'; delBtn.textContent = 'Excluir'; delBtn.onclick = ()=> { if(confirm('Excluir este slide?')) deleteSavedSlide(sid, idx); };
+
+        actions.appendChild(sendBtn); actions.appendChild(loadBtn); actions.appendChild(delBtn);
+        item.appendChild(summary); item.appendChild(actions);
+        slidesContainer.appendChild(item);
+      });
+    } else {
+      slidesContainer.innerHTML = '<div class="small">Nenhum slide</div>';
+    }
+
+    row.appendChild(slidesContainer);
+    sermonList.appendChild(row);
+  });
+}
+
+/* load single sermon by id (full) */
+async function loadSermon(id){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id));
+    if(!res.ok) throw new Error('Não encontrado');
+    const s = await res.json();
+    editingId = s.id || s._id || id; titleEl.value = s.title || '';
+    slides = s.slides || []; currentIndex = 0; currentSermon = s; renderSlides();
+  } catch(e){ alert('Erro: ' + e.message); }
+}
+
+/* delete sermon */
+async function deleteSermon(id){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id), { method: 'DELETE' });
+    if(!res.ok) throw new Error('Erro ao excluir');
+    alert('Excluído'); loadSermons();
+  } catch(e){ alert('Erro: ' + e.message); }
+}
+
+/* send sermon to display (by id) */
+async function sendSermonToDisplay(id, startIndex=0){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id));
+    if(!res.ok) throw new Error('Não encontrado');
+    const s = await res.json();
+    currentSermon = s; currentIndex = startIndex || 0;
+    if(ws && ws.readyState === WebSocket.OPEN){
+      ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: s }));
+      if(typeof startIndex === 'number' && startIndex > 0){
+        setTimeout(()=> {
+          ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index: startIndex }));
+        }, 120);
+      }
+      alert('Sermão enviado ao telão');
+    } else alert('WebSocket não conectado');
+  } catch(e){ alert('Erro: ' + e.message); }
+}
+
+/* ---------- NEW: Per-slide actions (saved sermons) ---------- */
+
+/* send one slide from a saved sermon to the telão */
+async function sendSavedSlide(sermonId, slideIndex){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(sermonId));
+    if(!res.ok) throw new Error('Sermão não encontrado');
+    const s = await res.json();
+    const slide = s.slides && s.slides[slideIndex];
+    if(!slide) throw new Error('Slide não encontrado');
+
+    // Build temp sermon with a single slide (preserves slide object shape)
+    const temp = { id: null, title: `${s.title} (slide ${slideIndex+1})`, slides: [slide] };
+
+    if(ws && ws.readyState === WebSocket.OPEN){
+      ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: temp }));
+      alert(`Slide ${slideIndex+1} enviado ao telão`);
+    } else {
+      alert('WebSocket não conectado');
+    }
+  } catch(e){ showError('Erro ao enviar slide: ' + e.message); }
+}
+
+/* load a single slide from a saved sermon into the editor */
+async function loadSavedSlide(sermonId, slideIndex){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(sermonId));
+    if(!res.ok) throw new Error('Sermão não encontrado');
+    const s = await res.json();
+    const slide = s.slides && s.slides[slideIndex];
+    if(!slide) throw new Error('Slide não encontrado');
+
+    // Load only that slide into editor. We set editingId to sermonId (so Save will update original),
+    // but you can change editingId=null if you prefer loading as a new temporary sermon.
+    editingId = sermonId;
+    titleEl.value = s.title || titleEl.value;
+    slides = [slide];
+    currentSermon = s;
+    currentIndex = 0;
+    renderSlides();
+    alert(`Slide ${slideIndex+1} carregado no editor`);
+  } catch(e){ showError('Erro ao carregar slide: ' + e.message); }
+}
+
+/* delete a single slide from a saved sermon (PUT updated slides) */
+async function deleteSavedSlide(sermonId, slideIndex){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(sermonId));
+    if(!res.ok) throw new Error('Sermão não encontrado');
+    const s = await res.json();
+    if(!s.slides || !s.slides.length) throw new Error('Sem slides');
+
+    s.slides.splice(slideIndex, 1);
+
+    // If no slides left, optionally delete whole sermon. Here we'll update; if empty -> delete sermon.
+    if(s.slides.length === 0){
+      // delete sermon
+      const del = await fetch(base + '/api/sermons/' + encodeURIComponent(sermonId), { method: 'DELETE' });
+      if(!del.ok) throw new Error('Erro ao excluir o sermão vazio');
+      alert('Slide excluído. Sermão ficou vazio e foi removido.');
+      await loadSermons();
+      return;
+    }
+
+    // send updated sermon via PUT
+    const payload = { title: s.title, slides: s.slides, date: new Date().toISOString() };
+    const upd = await fetch(base + '/api/sermons/' + encodeURIComponent(sermonId), { method: 'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if(!upd.ok) throw new Error('Erro ao atualizar sermão');
+    alert('Slide excluído com sucesso');
+    await loadSermons();
+  } catch(e){ showError('Erro ao excluir slide: ' + e.message); }
+}
+
+/* send single slide (current editor slide) */
+function sendSingleSlideToDisplay(slide){
+  if(!slide) return alert('Slide inválido');
+  const tempSermon = { id: null, title: titleEl.value || 'Slide (enviado)', slides: [slide] };
+  if(ws && ws.readyState === WebSocket.OPEN){
+    ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: tempSermon }));
+    alert('Slide enviado ao telão');
+  } else alert('WebSocket não conectado');
+}
+
+/* send saved sermon and goto idx */
+async function sendSermonAndGotoById(id, index){
+  try {
+    const base = baseUrl();
+    const res = await fetch(base + '/api/sermons/' + encodeURIComponent(id));
+    if(!res.ok) throw new Error('Não encontrado');
+    const s = await res.json();
+    currentSermon = s; currentIndex = index || 0;
+    if(ws && ws.readyState === WebSocket.OPEN){
+      ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: s }));
+      if(typeof index === 'number' && index > 0){
+        setTimeout(()=> ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index })), 120);
+      }
+      alert('Sermão enviado ao telão (iniciando no slide ' + (index+1) + ')');
+    } else alert('WebSocket não conectado');
+  } catch(e){ alert('Erro: ' + e.message); }
+}
+
+/* send sermon object and then goto index (for unsaved sermons) */
+function sendSermonObjectAndGoto(sermonObj, index){
+  if(!sermonObj) return alert('Nada para enviar');
+  if(ws && ws.readyState === WebSocket.OPEN){
+    ws.send(JSON.stringify({ type:'load', room: roomEl.value.trim(), sermon: sermonObj }));
+    if(typeof index === 'number' && index > 0){
+      setTimeout(()=> ws.send(JSON.stringify({ type:'goto', room: roomEl.value.trim(), index })), 120);
+    }
+    alert('Sermão (não salvo) enviado ao telão (iniciando no slide ' + (index+1) + ')');
+  } else alert('WebSocket não conectado');
+}
+
+/* Save & Send flow: ensure save happens before send */
+document.getElementById('sendBtn').addEventListener('click', async ()=> {
+  try {
+    // attempt save; if title missing saveSermon will throw and we stop
+    await saveSermon();
+    if(editingId){
+      // small delay to allow server processing
+      setTimeout(()=> sendSermonToDisplay(editingId, 0), 200);
+    } else {
+      const temp = { id:null, title: titleEl.value || 'Sermão (não salvo)', slides: slides };
+      sendSermonObjectAndGoto(temp, 0);
+    }
+  } catch(e){
+    if(e.message === 'no-title') return; // already alerted
+    alert('Erro ao enviar: ' + e.message);
+  }
+});
+
+/* WebSocket connect */
+document.getElementById('connectWS').addEventListener('click', ()=> {
+  const url = wsUrlEl.value.trim();
+  if(!url) return alert('Informe ws://host:port');
+  try {
+    if(ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)){
+      try { ws.close(); } catch(e){} // close existing
+    }
+    ws = new WebSocket(url);
+    document.getElementById('status').textContent = 'Conectando...';
+    ws.addEventListener('open', ()=> {
+      document.getElementById('status').textContent = 'Conectado';
+      ws.send(JSON.stringify({ type:'hello', role:'panel', room: roomEl.value.trim() }));
+    });
+    ws.addEventListener('message', (ev)=> {
+      // basic handling: if display sends ack or state we can react
+      try{ const m = JSON.parse(ev.data); console.log('ws msg', m); }catch(e){ console.log('ws raw', ev.data); }
+    });
+    ws.addEventListener('close', ()=> document.getElementById('status').textContent = 'Desconectado');
+    ws.addEventListener('error', ()=> document.getElementById('status').textContent = 'Erro');
+  } catch(e){ alert('Erro WS: ' + e.message); }
+});
+
+/* keyboard shortcuts */
+document.addEventListener('keydown', (e)=> {
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); document.getElementById('saveBtn').click(); }
+  if(e.key === 'ArrowRight') document.getElementById('nextBtn').click();
+  if(e.key === 'ArrowLeft') document.getElementById('prevBtn').click();
+});
+
+/* simple theme quick-apply buttons (applies to currently selected slide) */
+document.querySelectorAll('.theme-select .btn-ghost').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const theme = btn.getAttribute('data-theme');
+    if(slides.length === 0) return alert('Adicione um slide primeiro');
+    const s = slides[currentIndex];
+    s.style = s.style || {};
+    s.style.theme = theme;
+    applyThemeToStyle(s.style, theme);
+    renderSlides();
+  });
+});
+
+/* CRUD bindings: new & load */
+document.getElementById('loadBtn').addEventListener('click', loadSermons);
+document.getElementById('newBtn').addEventListener('click', ()=> { editingId = null; titleEl.value = ''; slides = []; currentSermon = null; currentIndex = 0; renderSlides(); });
+
+/* initialization */
+renderSlides();
+loadSermons();
+
+</script>
+</body>
+</html>

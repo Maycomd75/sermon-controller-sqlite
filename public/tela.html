@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Tela de Projeção — IQBJ</title>
+<style>
+:root{
+  --q-red:#c0392b; --q-yellow:#f6c85f; --q-blue:#2b6cb0; --q-purple:#7c3aed;
+  --bg-grad:linear-gradient(180deg,#03060a,#041226);
+}
+html,body{
+  height:100%; margin:0; font-family:Inter,Arial,Helvetica; background:var(--bg-grad); color:#fff; overflow:hidden;
+}
+.stage{
+  height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;
+  text-align:center; padding:40px; box-sizing:border-box;
+  background-size:cover; background-position:center; background-repeat:no-repeat;
+  background-color:#041226; transition: background 0.3s ease; image-rendering:auto;
+}
+.title{font-size:84px; font-weight:800; margin:0 0 10px; color:var(--q-yellow); text-shadow:0 6px 20px rgba(0,0,0,0.6);}
+.label{font-size:32px; opacity:0.95; margin-bottom:10px; color:var(--q-blue);}
+.content{font-size:40px; max-width:1600px; line-height:1.2; white-space:pre-wrap;}
+.verse{font-style:italic; font-size:34px;}
+.quote{font-size:48px; font-weight:800;}
+.two-cols{display:flex; gap:60px; align-items:flex-start; justify-content:center;}
+.img-wrap{display:flex; justify-content:center; align-items:center; width:100%; height:100%;}
+.img-wrap img{
+  max-width:100%; max-height:90vh; object-fit:contain; border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,0.6);
+}
+.small{position:fixed; right:16px; bottom:10px; font-size:14px; opacity:0.8;}
+@media(max-width:900px){
+  .title{font-size:38px;}
+  .content{font-size:20px;}
+  .quote{font-size:26px;}
+}
+</style>
+
+
+</head>
+<body>
+<div id="stage" class="stage" role="main" aria-live="polite">
+  <div id="title" class="title">Aguardando conexão...</div>
+  <div id="label" class="label"></div>
+  <div id="content" class="content"></div>
+  <div id="footer" class="small"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const room = params.get('room') || 'iqbj_sala1';
+const wsParam = params.get('ws');
+const serverHint = wsParam || (location.origin.replace(/^http/, 'ws'));
+document.getElementById('footer').textContent = `Room: ${room}`;
+
+let ws = null;
+let sermon = null;
+let index = 0;
+let frozen = false;
+
+function tryConnect(){
+  const url = serverHint;
+  ws = new WebSocket(url);
+  ws.addEventListener('open', ()=> {
+    ws.send(JSON.stringify({ type:'hello', role:'display', room }));
+    showMessage('Conectado — aguardando palavra...');
+  });
+  ws.addEventListener('message', (ev)=> {
+    try { const msg = JSON.parse(ev.data); handleMsg(msg); } catch(e){ console.error(e); }
+  });
+  ws.addEventListener('close', ()=> { showMessage('Desconectado — reconectando em 3s...'); setTimeout(tryConnect, 3000); });
+  ws.addEventListener('error', ()=> { showMessage('Erro de conexão — verifique servidor.'); setTimeout(tryConnect, 3000); });
+}
+tryConnect();
+
+function handleMsg(msg){
+  if(msg.type === 'load' && msg.sermon){
+    sermon = msg.sermon; index = 0; frozen = false; render();
+  } else if(msg.type === 'goto' && typeof msg.index === 'number'){
+    if(!frozen){ index = Math.max(0, Math.min((sermon && sermon.slides ? sermon.slides.length - 1 : 0), msg.index)); render(); }
+  } else if(msg.type === 'next'){ if(!frozen){ index = Math.min((sermon && sermon.slides ? sermon.slides.length - 1 : 0), index + 1); render(); } }
+  else if(msg.type === 'prev'){ if(!frozen){ index = Math.max(0, index - 1); render(); } }
+  else if(msg.type === 'command' && msg.cmd){
+    if(msg.cmd === 'freeze'){ frozen = true; showOverlay('Tela congelada'); }
+    if(msg.cmd === 'unfreeze'){ frozen = false; hideOverlay(); render(); }
+  }
+}
+
+function render(){
+  const stageEl = document.getElementById('stage');
+  const titleEl = document.getElementById('title');
+  const labelEl = document.getElementById('label');
+  const contentEl = document.getElementById('content');
+  if(!sermon){ titleEl.textContent = 'Aguardando sermão...'; labelEl.textContent = ''; contentEl.textContent = ''; stageEl.style.background=''; return; }
+
+  const slide = sermon.slides[index] || { type:'title', data:{ content: sermon.title }, style: {} };
+  const style = slide.style || {};
+
+  // Fundo
+  if(style.bgImage){
+    stageEl.style.backgroundImage = `url(${style.bgImage})`;
+    stageEl.style.backgroundSize = 'cover';
+    stageEl.style.backgroundPosition = 'center';
+    stageEl.style.backgroundRepeat = 'no-repeat';
+    stageEl.style.imageRendering = 'auto';
+  } else if(style.bgColor){
+    stageEl.style.backgroundImage = '';
+    stageEl.style.backgroundColor = style.bgColor;
+  } else {
+    stageEl.style.backgroundImage = '';
+    stageEl.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-grad');
+  }
+
+  // Cor do texto
+  const textColor = style.textColor || '#ffffff';
+  titleEl.style.color = textColor; 
+  labelEl.style.color = textColor; 
+  contentEl.style.color = textColor;
+
+  // Reset
+  titleEl.style.display = 'block';
+  labelEl.textContent = ''; contentEl.innerHTML = '';
+
+  // Renderização por tipo
+  if(slide.type === 'title'){
+    titleEl.textContent = slide.data.content || sermon.title || '';
+    labelEl.textContent = slide.data.subtitle || '';
+  } else if(slide.type === 'bullet'){
+    titleEl.textContent = sermon.title || '';
+    const ul = document.createElement('ul'); ul.style.listStyle='disc'; ul.style.margin='10px auto'; ul.style.maxWidth='1200px';
+    (slide.data.lines||[]).forEach(li => { const liEl = document.createElement('li'); liEl.style.fontSize='36px'; liEl.style.marginBottom='8px'; liEl.textContent = li; ul.appendChild(liEl); });
+    contentEl.appendChild(ul);
+  } else if(slide.type === 'verse'){
+    titleEl.textContent = '';
+    labelEl.textContent = slide.data.reference || '';
+    const v = document.createElement('div'); v.className='verse'; v.textContent = slide.data.verseText || '';
+    contentEl.appendChild(v);
+  } else if(slide.type === 'image'){
+    titleEl.textContent = slide.data.caption || '';
+    const wrap = document.createElement('div'); wrap.className='img-wrap'; 
+    const img = document.createElement('img'); 
+    img.src = slide.data.imageUrl || ''; 
+    img.alt = slide.data.caption || '';
+    wrap.appendChild(img); 
+    contentEl.appendChild(wrap);
+  } else if(slide.type === 'quote'){
+    titleEl.textContent = '';
+    const q = document.createElement('div'); q.className='quote'; q.textContent = slide.data.content || '';
+    const a = document.createElement('div'); a.className='small'; a.style.marginTop='10px'; a.textContent = slide.data.author || '';
+    contentEl.appendChild(q); contentEl.appendChild(a);
+  } else if(slide.type === 'two'){
+    titleEl.textContent = '';
+    const wrapper = document.createElement('div'); wrapper.className='two-cols';
+    const left = document.createElement('div'); left.style.maxWidth='640px'; left.style.textAlign='left'; left.innerHTML = slide.data.left || '';
+    const right = document.createElement('div'); right.style.maxWidth='640px'; right.style.textAlign='left'; right.style.color='rgba(255,255,255,0.9)'; right.innerHTML = slide.data.right || '';
+    wrapper.appendChild(left); wrapper.appendChild(right); contentEl.appendChild(wrapper);
+  } else if(slide.type === 'highlight'){
+    titleEl.textContent = '';
+    const box = document.createElement('div'); box.style.background='linear-gradient(90deg,var(--q-yellow),rgba(255,255,255,0.02))'; 
+    box.style.padding='20px'; box.style.borderRadius='12px'; box.style.fontWeight='800'; box.style.fontSize='36px'; box.textContent = slide.data.content || '';
+    contentEl.appendChild(box);
+  }
+
+  document.getElementById('footer').textContent = `Room: ${room} • ${sermon.title || ''} • Slide ${index+1}/${(sermon.slides?sermon.slides.length:0)}`;
+}
+
+function showMessage(txt){
+  document.getElementById('title').textContent = txt;
+  document.getElementById('content').textContent = '';
+}
+
+function showOverlay(txt){
+  const ov = document.getElementById('freezeOverlay') || document.createElement('div');
+  ov.id = 'freezeOverlay';
+  ov.style.position='fixed'; ov.style.left='0'; ov.style.top='0'; ov.style.width='100%'; ov.style.height='100%';
+  ov.style.display='flex'; ov.style.alignItems='center'; ov.style.justifyContent='center';
+  ov.style.background='rgba(0,0,0,0.45)'; ov.style.zIndex='9999'; ov.style.fontSize='48px'; ov.style.color='#fff'; ov.textContent = txt;
+  document.body.appendChild(ov);
+}
+function hideOverlay(){ const ov = document.getElementById('freezeOverlay'); if(ov) ov.remove(); }
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight'){ index++; render(); }
+  if(e.key === 'ArrowLeft'){ index = Math.max(0, index-1); render(); }
+  if(e.key === 'f'){ if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); }
+});
+</script>
+</body>
+</html>

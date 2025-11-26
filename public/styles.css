@@ -1,0 +1,177 @@
+/* =============================
+   ESTILO GERAL
+============================= */
+body {
+    margin: 0;
+    padding: 0;
+    background: #1b1b1b;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #f0f0f0;
+}
+
+header {
+    background: #272727;
+    padding: 18px;
+    text-align: center;
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    border-bottom: 2px solid #444;
+}
+
+main {
+    padding: 20px;
+}
+
+/* =============================
+   FORMULÁRIO DO SERMÃO
+============================= */
+
+#sermonForm {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#sermonForm input {
+    padding: 12px;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+}
+
+#sermonForm button {
+    padding: 14px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#sermonForm button:hover {
+    background: #2563eb;
+}
+
+/* =============================
+   LISTA DE SLIDES
+============================= */
+
+#slidesEditor h2 {
+    margin-top: 40px;
+    font-size: 24px;
+}
+
+#slidesList {
+    margin-top: 20px;
+}
+
+/* Caixa de cada slide */
+.slideBox {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.slideBox:hover {
+    border-color: #777;
+}
+
+/* Texto do slide */
+.slideText {
+    width: 100%;
+    height: 120px;
+    border-radius: 8px;
+    background: #1f1f1f;
+    border: 1px solid #555;
+    color: white;
+    padding: 10px;
+    font-size: 18px;
+}
+
+/* Ferramentas do slide */
+.slideTools {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.slideTools label {
+    font-size: 14px;
+}
+
+.slideTools input[type="color"] {
+    width: 50px;
+    height: 35px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.slideTools input[type="file"] {
+    color: #ccc;
+}
+
+/* Botões dos slides */
+.slideTools button {
+    background: #444;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 14px;
+}
+
+.slideTools button:hover {
+    background: #666;
+}
+
+.btnSend {
+    background: #10b981 !important;
+}
+
+.btnSend:hover {
+    background: #059669 !important;
+}
+
+.btnDel {
+    background: #ef4444 !important;
+}
+
+.btnDel:hover {
+    background: #dc2626 !important;
+}
+
+/* =============================
+   BOTÃO "Adicionar Slide"
+============================= */
+
+#addSlideBtn {
+    margin-top: 25px;
+    padding: 15px;
+    background: #6d28d9;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#addSlideBtn:hover {
+    background: #5b21b6;
+}
